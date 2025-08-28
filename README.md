@@ -30,6 +30,23 @@ source scripts/export_env.sh
 The script exports the variables defined in `.env` into the current shell for
 tools like `pgcli`.
 
+The following variables define how to connect to PostgreSQL:
+
+- `PG_HOST` - database host
+- `PG_PORT` - database port
+- `PG_USER` - database user
+- `PG_PASS` - database password
+- `DB_NAME` - database name
+
+## Connect with pgcli
+
+```bash
+cp .env-sample .env
+source scripts/export_env.sh
+bazel run //:setup_venv
+bazel run //scripts:pgcli
+```
+
 ## Troubleshooting
 
 If you encounter SSL certificate chain errors:

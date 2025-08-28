@@ -1,0 +1,5 @@
+sh_binary(
+    name = "pgcli",
+    srcs = ["pgcli.sh"],
+    visibility = ["//visibility:public"],
+)
