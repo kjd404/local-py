@@ -30,6 +30,15 @@ source scripts/export_env.sh
 The script exports the variables defined in `.env` into the current shell for
 tools like `pgcli`.
 
+## Troubleshooting
+
+If you encounter SSL certificate chain errors:
+
+* Update the operating system's CA certificates (for example, `sudo update-ca-certificates` on Debian/Ubuntu).
+* Force Bazel to use its bundled JDK: `bazel --host_jvm_args=-Djavax.net.ssl.trustStore=<path>` or install Bazelisk, which ships its own JDK.
+
+The repository's `.bazelversion` already specifies a current Bazel release, minimizing such issues.
+
 ## Usage
 
 Run Bazel commands from the repository root. For example:
