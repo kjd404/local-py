@@ -1,0 +1,11 @@
+module(name = "local_py", version = "0.1.0")
+
+bazel_dep(name = "rules_python", version = "0.30.0")
+
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    name = "python_311",
+    python_version = "3.11.8",
+)
+use_repo(python, "python_311")
+register_toolchains("@python_311//:all")
