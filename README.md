@@ -41,11 +41,18 @@ The repository's `.bazelversion` already specifies a current Bazel release, mini
 
 ## Usage
 
-Run Bazel commands from the repository root. For example:
+Run Bazel commands from the repository root using Bazelisk so the version in
+`.bazelversion` is honored. For example:
 
 ```bash
 bazel build //python:hello
 bazel run //python:hello
+```
+
+If `bazel` isn't provided by Bazelisk on your PATH, run Bazelisk directly:
+
+```bash
+bazelisk run //python:hello
 ```
 
 To create a virtual environment in the repo root that matches the Bazel Python
