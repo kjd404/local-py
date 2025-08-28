@@ -13,4 +13,5 @@ py_binary(
     srcs = ["setup_venv.py"],
     main = "setup_venv.py",
     data = ["requirements.txt"],
+    visibility = ["//visibility:public"],
 )
