@@ -7,3 +7,10 @@ py_binary(
     main = "hello.py",
     deps = [requirement("requests")],
 )
+
+py_binary(
+    name = "setup_venv",
+    srcs = ["setup_venv.py"],
+    main = "setup_venv.py",
+    data = ["requirements.txt"],
+)
