@@ -1,6 +1,8 @@
-# Local Python Bazel Example
+# Local Bazel Monorepo Example
 
-This repository demonstrates a minimal Bazel setup using **bzlmod** and `rules_python`.
+This repository demonstrates a minimal Bazel setup using **bzlmod** and
+`rules_python`.  The Python code lives under the `python/` directory to make room
+for additional languages in the future.
 
 ## Prerequisites
 
@@ -16,20 +18,32 @@ brew install bazelisk
 
 On other platforms, download a binary from the [Bazelisk releases](https://github.com/bazelbuild/bazelisk/releases).
 
-## Usage
+## Environment
 
-Run Bazel commands as usual. For example:
+Copy the sample environment file and adjust values for your local setup:
 
 ```bash
-bazel build //:hello
-bazel run //:hello
+cp .env-sample .env
+source scripts/export_env.sh
+```
+
+The script exports the variables defined in `.env` into the current shell for
+tools like `pgcli`.
+
+## Usage
+
+Run Bazel commands from the repository root. For example:
+
+```bash
+bazel build //python:hello
+bazel run //python:hello
 ```
 
 To create a virtual environment in the repo root that matches the Bazel Python
-toolchain and installs `requirements.txt`:
+toolchain and installs `requirements.txt` (including `ipython` and `pgcli`):
 
 ```bash
-bazel run //:setup_venv
+bazel run //python:setup_venv
 ```
 
 The environment is created at `.venv/` and is ignored by Git.
