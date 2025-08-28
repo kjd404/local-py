@@ -43,7 +43,7 @@ To create a virtual environment in the repo root that matches the Bazel Python
 toolchain and installs `requirements.txt` (including `ipython` and `pgcli`):
 
 ```bash
-bazel run //python:setup_venv
+bazel run //:setup_venv
 ```
 
 The environment is created at `.venv/` and is ignored by Git.
