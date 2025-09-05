@@ -59,10 +59,17 @@ class GmailPollerTest(TestCase):
         with patch.object(GmailPoller, "_authorize", return_value=self.service):
             poller = GmailPoller()
             kernel = sk.Kernel()
-            kernel.add_function("gmail", poller.poll, function_name="poll")
-            emails = asyncio.run(
-                kernel.invoke("gmail", "poll", sender="sender@example.com")
+            kernel.add_function(
+                plugin_name="gmail", function=poller.poll, function_name="poll"
             )
+            result = asyncio.run(
+                kernel.invoke(
+                    function_name="poll",
+                    plugin_name="gmail",
+                    sender="sender@example.com",
+                )
+            )
+            emails = result.value if result else []
 
         self.assertEqual(
             [

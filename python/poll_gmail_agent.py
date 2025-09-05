@@ -15,12 +15,16 @@ async def main() -> None:
     poller = GmailPoller()
 
     # Register a skill/function that calls `GmailPoller.poll`.
-    kernel.add_function("gmail", poller.poll, function_name="poll")
+    kernel.add_function(
+        plugin_name="gmail", function=poller.poll, function_name="poll"
+    )
 
     sender = os.environ.get("GMAIL_SENDER", "")
     while True:
-        emails = await kernel.invoke("gmail", "poll", sender=sender)
-        for email in emails:
+        result = await kernel.invoke(
+            function_name="poll", plugin_name="gmail", sender=sender
+        )
+        for email in result.value if result else []:
             logging.info("New email %s: %s", email.id, email.snippet)
         await asyncio.sleep(60)
 
