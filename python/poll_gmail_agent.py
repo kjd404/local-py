@@ -1,13 +1,13 @@
+import asyncio
 import logging
 import os
-import time
 
 import semantic_kernel as sk
 
 from gmail_poller import GmailPoller
 
 
-def main() -> None:
+async def main() -> None:
     """Poll Gmail for new messages and log them."""
     logging.basicConfig(level=logging.INFO)
 
@@ -15,15 +15,15 @@ def main() -> None:
     poller = GmailPoller()
 
     # Register a skill/function that calls `GmailPoller.poll`.
-    kernel.add_native_function("gmail", "poll", poller.poll)
+    kernel.add_function("gmail", poller.poll, function_name="poll")
 
     sender = os.environ.get("GMAIL_SENDER", "")
     while True:
-        emails = kernel.invoke("gmail", "poll", sender)
+        emails = await kernel.invoke("gmail", "poll", sender=sender)
         for email in emails:
             logging.info("New email %s: %s", email.id, email.snippet)
-        time.sleep(60)
+        await asyncio.sleep(60)
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

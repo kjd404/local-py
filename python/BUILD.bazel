@@ -45,6 +45,16 @@ py_binary(
 )
 
 py_binary(
+    name = "chat_gmail_agent",
+    srcs = ["chat_gmail_agent.py"],
+    main = "chat_gmail_agent.py",
+    deps = [
+        ":gmail_poller",
+        requirement("semantic-kernel"),
+    ],
+)
+
+py_binary(
     name = "get_gmail_token",
     srcs = ["get_gmail_token.py"],
     main = "get_gmail_token.py",
