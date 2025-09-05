@@ -5,7 +5,13 @@ py_binary(
     name = "hello",
     srcs = ["hello.py"],
     main = "hello.py",
-    deps = [requirement("requests")],
+    deps = [
+        requirement("requests"),
+        requirement("semantic-kernel"),
+        requirement("google-api-python-client"),
+        requirement("google-auth"),
+        requirement("google-auth-oauthlib"),
+    ],
 )
 
 py_binary(
