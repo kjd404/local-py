@@ -7,6 +7,7 @@ if [ -f "$(dirname "$0")/../.env" ]; then
   # shellcheck disable=SC1091
   source "$(dirname "$0")/../.env"
   set +a
+  export GMAIL_CLIENT_ID GMAIL_CLIENT_SECRET GMAIL_TOKEN_PATH GMAIL_SENDER_FILTER
   echo "Environment variables loaded from .env"
 else
   echo ".env file not found" >&2
