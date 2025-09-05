@@ -80,3 +80,45 @@ bazel run //:setup_venv
 ```
 
 The environment is created at `.venv/` and is ignored by Git.
+
+## Poll Gmail for New Messages
+
+Install dependencies and prepare Gmail credentials to run a simple
+Semantic Kernel agent that logs unread messages from a sender.
+
+1. Set up the Python environment:
+
+   ```bash
+   bazel run //:setup_venv
+   ```
+
+2. Create a `.env` with your Gmail OAuth client and desired sender filter:
+
+   ```bash
+   cp .env-sample .env
+   # edit GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_SENDER
+   source scripts/export_env.sh
+   ```
+
+   The first run will launch a browser for OAuth consent and store a token at
+   `GMAIL_TOKEN_PATH` (default `token.json`).
+
+3. Start the poller:
+
+   ```bash
+   bazel run //python:poll_gmail_agent
+   ```
+
+   It logs any new messages from `GMAIL_SENDER` every minute.
+
+### Using a local LLM endpoint with SK
+
+Semantic Kernel defaults to OpenAI. To point it at a locally hosted model, set
+the endpoint and key before running the poller:
+
+```bash
+export OPENAI_API_KEY=sk-local-key
+export OPENAI_API_BASE=http://localhost:1234/v1
+```
+
+Replace the base URL with your LLM server's address.
