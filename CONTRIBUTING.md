@@ -8,9 +8,10 @@
 
 ## Package layout
 
-- All Python code lives under the `python/` directory.
+- All Python code lives under the `python/` directory with the primary package
+  in `python/local_py`.
 - Package and module names use `snake_case`.
-- Preserve the existing package structure from the refactor and group related code together.
+- Preserve the existing package structure and group related code together.
 
 ## Testing
 

@@ -13,11 +13,12 @@ from googleapiclient.discovery import build
 from semantic_kernel.functions import kernel_function
 
 TOKEN_PATH = Path(os.environ.get("GMAIL_TOKEN_PATH", "token.json"))
-# Copy client_secret.sample.json to client_secret.json and fill in your OAuth credentials.
+# Copy credentials.sample.json to credentials.json and fill in your
+# OAuth credentials.
 CREDENTIALS_PATH = Path(
     os.environ.get(
         "GMAIL_CREDENTIALS_FILE",
-        str(Path(__file__).resolve().parent.parent / "client_secret.json"),
+        str(Path(__file__).resolve().parent.parent / "credentials.json"),
     )
 )
 SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]
