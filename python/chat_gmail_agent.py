@@ -4,6 +4,7 @@ import logging
 import os
 import semantic_kernel as sk
 from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
+from semantic_kernel.exceptions import KernelInvokeException
 from gmail_poller import GmailPoller
 
 
@@ -36,11 +37,17 @@ async def chat_loop(kernel: sk.Kernel) -> None:
         if user.strip().lower() in {"exit", "quit"}:
             break
         # Forward user message through the kernel so the model can decide to call functions.
-        result = await kernel.invoke(
-            plugin_name="chat",
-            function_name="chat",
-            input=user,
-        )
+        try:
+            result = await kernel.invoke(
+                plugin_name="chat",
+                function_name="chat",
+                input=user,
+            )
+        except KernelInvokeException as exc:
+            logging.error("Chat invocation failed: %s", exc)
+            print("Error: unable to generate chat response. Check API key and quota.")
+            continue
+
         if result:
             print(result)
 
