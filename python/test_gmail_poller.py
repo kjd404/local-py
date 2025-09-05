@@ -1,6 +1,6 @@
 import asyncio
 from unittest import TestCase
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import semantic_kernel as sk
 
@@ -36,9 +36,8 @@ class GmailPollerTest(TestCase):
         self.messages.modify.side_effect = modify_call
 
     def test_poll_returns_emails(self) -> None:
-        with patch.object(GmailPoller, "_authorize", return_value=self.service):
-            poller = GmailPoller()
-            emails = poller.poll("sender@example.com")
+        poller = GmailPoller(service=self.service)
+        emails = poller.poll("sender@example.com")
 
         self.assertEqual(
             [
@@ -56,20 +55,19 @@ class GmailPollerTest(TestCase):
         )
 
     def test_poll_kernel_function(self) -> None:
-        with patch.object(GmailPoller, "_authorize", return_value=self.service):
-            poller = GmailPoller()
-            kernel = sk.Kernel()
-            kernel.add_function(
-                plugin_name="gmail", function=poller.poll, function_name="poll"
+        poller = GmailPoller(service=self.service)
+        kernel = sk.Kernel()
+        kernel.add_function(
+            plugin_name="gmail", function=poller.poll, function_name="poll"
+        )
+        result = asyncio.run(
+            kernel.invoke(
+                function_name="poll",
+                plugin_name="gmail",
+                sender="sender@example.com",
             )
-            result = asyncio.run(
-                kernel.invoke(
-                    function_name="poll",
-                    plugin_name="gmail",
-                    sender="sender@example.com",
-                )
-            )
-            emails = result.value if result else []
+        )
+        emails = result.value if result else []
 
         self.assertEqual(
             [

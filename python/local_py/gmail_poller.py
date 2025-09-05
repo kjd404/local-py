@@ -33,22 +33,43 @@ class Email:
 class GmailPoller:
     """Poll the Gmail API for unread messages, optionally filtered by sender."""
 
-    def __init__(self) -> None:
-        self.service = self._authorize()
+    def __init__(
+        self,
+        *,
+        token_path: Path | str = TOKEN_PATH,
+        credentials_path: Path | str = CREDENTIALS_PATH,
+        service: Optional[object] = None,
+    ) -> None:
+        """Create a new :class:`GmailPoller`.
 
-    def _authorize(self):
+        Args:
+            token_path: Path to the OAuth token JSON file. Defaults to
+                :data:`TOKEN_PATH`.
+            credentials_path: Path to the OAuth client credentials. Defaults to
+                :data:`CREDENTIALS_PATH`.
+            service: Pre-authorized Gmail API service. If provided, authorization
+                is skipped.
+        """
+
+        self.token_path = Path(token_path)
+        self.credentials_path = Path(credentials_path)
+        self.service = service or self._authorize(self.token_path, self.credentials_path)
+
+    @staticmethod
+    def _authorize(token_path: Path, credentials_path: Path):
+        """Return an authorized Gmail API service."""
         creds: Credentials | None = None
-        if TOKEN_PATH.exists():
-            creds = Credentials.from_authorized_user_file(str(TOKEN_PATH), SCOPES)
+        if token_path.exists():
+            creds = Credentials.from_authorized_user_file(str(token_path), SCOPES)
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
             else:
                 flow = InstalledAppFlow.from_client_secrets_file(
-                    str(CREDENTIALS_PATH), SCOPES
+                    str(credentials_path), SCOPES
                 )
                 creds = flow.run_local_server(port=0)
-            TOKEN_PATH.write_text(creds.to_json())
+            token_path.write_text(creds.to_json())
         return build("gmail", "v1", credentials=creds)
 
     @kernel_function(description="Poll Gmail for unread messages, optionally filtered by sender.")
