@@ -138,11 +138,11 @@ Replace the base URL with your LLM server's address.
 
 ## Testing
 
-Run pre-commit hooks and the full test suite:
+Run pre-commit hooks and the Python test suite:
 
 ```bash
 pre-commit run --all-files
-bazel test //...
+bazel test //python:tests
 ```
 
 ## Contributing

@@ -54,6 +54,15 @@ class GmailPollerTest(TestCase):
             userId="me", id="2", body={"removeLabelIds": ["UNREAD"]}
         )
 
+    def test_poll_handles_errors(self) -> None:
+        poller = GmailPoller(service=self.service)
+        self.messages.list.return_value.execute.side_effect = OSError("boom")
+
+        emails = poller.poll("sender@example.com")
+
+        self.assertEqual([], emails)
+        self.messages.get.assert_not_called()
+
     def test_poll_kernel_function(self) -> None:
         poller = GmailPoller(service=self.service)
         kernel = sk.Kernel()
