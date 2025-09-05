@@ -125,3 +125,7 @@ export OPENAI_API_BASE=http://localhost:1234/v1
 ```
 
 Replace the base URL with your LLM server's address.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for coding standards, package layout, and testing requirements.
