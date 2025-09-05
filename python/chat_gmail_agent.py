@@ -3,7 +3,10 @@ import asyncio
 import logging
 import os
 import semantic_kernel as sk
-from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
+from semantic_kernel.connectors.ai.open_ai import (
+    OpenAIChatCompletion,
+    OpenAIChatPromptExecutionSettings,
+)
 from semantic_kernel.exceptions import KernelInvokeException
 from gmail_poller import GmailPoller
 
@@ -24,7 +27,7 @@ def create_kernel() -> sk.Kernel:
         plugin_name="gmail",
         function=poller.poll,
         function_name="poll",
-        description="Poll Gmail for unread messages from a sender.",
+        description="Poll Gmail for unread messages, optionally filtered by sender.",
     )
     return kernel
 
@@ -42,6 +45,9 @@ async def chat_loop(kernel: sk.Kernel) -> None:
                 plugin_name="chat",
                 function_name="chat",
                 input=user,
+                execution_settings=OpenAIChatPromptExecutionSettings(
+                    tool_choice="auto"
+                ),
             )
         except KernelInvokeException as exc:
             logging.error("Chat invocation failed: %s", exc)
@@ -60,7 +66,10 @@ def main() -> None:
         plugin_name="chat",
         function_name="chat",
         description="General chat interface",
-        prompt="""{{$input}}""",
+        prompt=(
+            "You are a helpful assistant. Use the gmail.poll function to check "
+            "for unread emails when the user requests it. {{$input}}"
+        ),
     )
     asyncio.run(chat_loop(kernel))
 
