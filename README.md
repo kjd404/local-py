@@ -92,16 +92,18 @@ Semantic Kernel agent that logs unread messages from a sender.
    bazel run //:setup_venv
    ```
 
-2. Create a `.env` with your Gmail OAuth client and desired sender filter:
+2. Create a `.env` with your Gmail OAuth client and desired sender filter, then
+   generate an OAuth token:
 
    ```bash
    cp .env-sample .env
    # edit GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_SENDER
    source scripts/export_env.sh
+   python get_gmail_token.py --secrets client_secret.json --token token.json
    ```
 
-   The first run will launch a browser for OAuth consent and store a token at
-   `GMAIL_TOKEN_PATH` (default `token.json`).
+   The script launches a browser for OAuth consent and writes the token to
+   `token.json`.
 
 3. Start the poller:
 
