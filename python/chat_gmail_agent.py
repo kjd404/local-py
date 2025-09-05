@@ -45,9 +45,6 @@ async def chat_loop(kernel: sk.Kernel) -> None:
                 plugin_name="chat",
                 function_name="chat",
                 input=user,
-                settings=OpenAIChatPromptExecutionSettings(
-                    tool_choice="auto"
-                ),
             )
         except KernelInvokeException as exc:
             logging.error("Chat invocation failed: %s", exc)
