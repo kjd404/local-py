@@ -41,10 +41,12 @@ async def chat_loop(kernel: sk.Kernel) -> None:
             break
         # Forward user message through the kernel so the model can decide to call functions.
         try:
+            settings = OpenAIChatPromptExecutionSettings(tool_choice="auto")
             result = await kernel.invoke(
                 plugin_name="chat",
                 function_name="chat",
                 input=user,
+                execution_settings=settings,
             )
         except KernelInvokeException as exc:
             logging.error("Chat invocation failed: %s", exc)
