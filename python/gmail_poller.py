@@ -10,6 +10,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from semantic_kernel.functions import kernel_function
 
 TOKEN_PATH = Path(os.environ.get("GMAIL_TOKEN_PATH", "token.json"))
 CREDENTIALS_PATH = Path(
@@ -49,6 +50,7 @@ class GmailPoller:
             TOKEN_PATH.write_text(creds.to_json())
         return build("gmail", "v1", credentials=creds)
 
+    @kernel_function(description="Poll Gmail for unread messages from a sender.")
     def poll(self, sender: str) -> List[Email]:
         """Return unread messages from the given sender.
 
