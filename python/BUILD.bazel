@@ -26,6 +26,7 @@ py_binary(
 py_library(
     name = "gmail_poller",
     srcs = ["gmail_poller.py"],
+    imports = ["."],
     deps = [
         requirement("google-api-python-client"),
         requirement("google-auth"),
