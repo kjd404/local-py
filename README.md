@@ -4,6 +4,12 @@ This repository demonstrates a minimal Bazel setup using **bzlmod** and
 `rules_python`.  The Python code lives under the `python/` directory to make room
 for additional languages in the future.
 
+## Package Layout
+
+Python sources reside in `python/` with the main package under
+`python/local_py`. Modules elsewhere in `python/` are entry points or
+supporting scripts.
+
 ## Prerequisites
 
 Install [Bazelisk](https://github.com/bazelbuild/bazelisk). Bazelisk automatically
@@ -24,11 +30,12 @@ Copy the sample environment file and adjust values for your local setup:
 
 ```bash
 cp .env-sample .env
+# edit PG_*, GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_SENDER
 source scripts/export_env.sh
 ```
 
 The script exports the variables defined in `.env` into the current shell for
-tools like `pgcli`.
+tools like `pgcli` and the Gmail polling agent.
 
 The following variables define how to connect to PostgreSQL:
 
@@ -38,11 +45,15 @@ The following variables define how to connect to PostgreSQL:
 - `PG_PASS` - database password
 - `DB_NAME` - database name
 
+Gmail polling also uses:
+
+- `GMAIL_CLIENT_ID` - OAuth client ID
+- `GMAIL_CLIENT_SECRET` - OAuth client secret
+- `GMAIL_SENDER` - sender filter for messages
+
 ## Connect with pgcli
 
 ```bash
-cp .env-sample .env
-source scripts/export_env.sh
 bazel run //:setup_venv
 bazel run //scripts:pgcli
 ```
@@ -92,15 +103,14 @@ Semantic Kernel agent that logs unread messages from a sender.
    bazel run //:setup_venv
    ```
 
-2. Copy the sample OAuth client secrets file and create a `.env` with your Gmail
-   OAuth client and desired sender filter, then generate an OAuth token:
+2. Copy the sample OAuth client credentials file and generate an OAuth token.
+   Ensure your `.env` defines the `GMAIL_CLIENT_ID`, `GMAIL_CLIENT_SECRET`,
+   and `GMAIL_SENDER` variables:
 
    ```bash
-   cp python/client_secret.sample.json python/client_secret.json
-   cp .env-sample .env
-   # edit GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_SENDER
-   source scripts/export_env.sh
-   python get_gmail_token.py --secrets client_secret.json --token token.json
+   cp python/credentials.sample.json python/credentials.json
+   source scripts/export_env.sh  # if not already sourced
+   python -m local_py.get_gmail_token --secrets python/credentials.json --token token.json
    ```
 
    The script launches a browser for OAuth consent and writes the token to
@@ -125,6 +135,14 @@ export OPENAI_API_BASE=http://localhost:1234/v1
 ```
 
 Replace the base URL with your LLM server's address.
+
+## Testing
+
+Run the full test suite with Bazel:
+
+```bash
+bazel test //...
+```
 
 ## Contributing
 

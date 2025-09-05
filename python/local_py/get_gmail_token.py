@@ -1,7 +1,7 @@
 """Script to obtain a Gmail API token.
 
 Usage:
-    python get_gmail_token.py --secrets client_secret.json --token token.json
+    python -m local_py.get_gmail_token --secrets python/credentials.json --token token.json
 """
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ def main() -> None:
         "--secrets",
         type=Path,
         required=True,
-        help="Path to client secrets JSON",
+        help="Path to OAuth client credentials JSON",
     )
     parser.add_argument(
         "--token",
