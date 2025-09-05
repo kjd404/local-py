@@ -209,3 +209,5 @@ __marimo__/
 # Bazel
 bazel-*
 .bazelrc.user
+# Gmail OAuth secrets
+python/client_secret.json

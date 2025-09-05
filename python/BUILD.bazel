@@ -4,7 +4,7 @@ load("@rules_python//python:py_library.bzl", "py_library")
 
 filegroup(
     name = "gmail_credentials",
-    srcs = ["credentials.json"],
+    srcs = ["client_secret.sample.json"],
 )
 
 py_binary(
