@@ -1,3 +1,5 @@
+"""Tests for :mod:`chat_gmail_agent` using mocked services."""
+
 import json
 from types import SimpleNamespace
 from unittest import TestCase
@@ -8,7 +10,10 @@ from local_py.gmail_poller import Email
 
 
 class ChatGmailAgentTest(TestCase):
+    """Verify chat agent interactions with the Gmail poller."""
+
     def test_run_polls_and_prints_reply(self) -> None:
+        """Poll Gmail and print the agent's reply using mocks."""
         poller = MagicMock()
         poller.poll.return_value = [Email(id="1", snippet="snippet 1")]
 

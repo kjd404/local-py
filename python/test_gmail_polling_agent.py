@@ -1,3 +1,5 @@
+"""Tests for the asynchronous Gmail polling agent using mocks."""
+
 import asyncio
 from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -6,7 +8,10 @@ from local_py.gmail_polling_agent import GmailPollingAgent
 
 
 class GmailPollingAgentTest(IsolatedAsyncioTestCase):
+    """Verify repeated polling behavior and interval handling."""
+
     async def test_run_polls_until_cancelled(self) -> None:
+        """Poll until cancellation to ensure repeated execution."""
         poller = MagicMock()
         poller.poll.return_value = []
 
@@ -19,6 +24,7 @@ class GmailPollingAgentTest(IsolatedAsyncioTestCase):
         self.assertGreaterEqual(poller.poll.call_count, 1)
 
     async def test_run_uses_provided_interval(self) -> None:
+        """Override default interval when provided at run time."""
         poller = MagicMock()
         poller.poll.return_value = []
 

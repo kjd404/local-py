@@ -5,5 +5,8 @@ alias(
 
 test_suite(
     name = "tests",
-    tests = ["//python:tests"],
+    tests = [
+        "//python:tests",
+        "//python:setup_venv_test",
+    ],
 )
