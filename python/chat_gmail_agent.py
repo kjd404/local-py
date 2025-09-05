@@ -45,7 +45,7 @@ async def chat_loop(kernel: sk.Kernel) -> None:
                 plugin_name="chat",
                 function_name="chat",
                 input=user,
-                execution_settings=OpenAIChatPromptExecutionSettings(
+                settings=OpenAIChatPromptExecutionSettings(
                     tool_choice="auto"
                 ),
             )
