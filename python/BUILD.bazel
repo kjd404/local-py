@@ -53,14 +53,24 @@ py_binary(
     data = [":gmail_credentials"],
 )
 
-py_binary(
-    name = "chat_gmail_agent",
-    srcs = ["local_py/chat_gmail_agent.py"],
-    main = "local_py/chat_gmail_agent.py",
+py_library(
+    name = "chat_gmail_agent_lib",
+    srcs = ["chat_gmail_agent.py"],
     imports = ["."],
     deps = [
         ":gmail_poller",
         requirement("openai"),
+    ],
+    visibility = ["//visibility:public"],
+)
+
+py_binary(
+    name = "chat_gmail_agent",
+    srcs = ["chat_gmail_agent.py"],
+    main = "chat_gmail_agent.py",
+    imports = ["."],
+    deps = [
+        ":chat_gmail_agent_lib",
     ],
     data = [":gmail_credentials"],
 )
@@ -81,6 +91,12 @@ py_test(
     name = "gmail_poller_test",
     srcs = ["test_gmail_poller.py"],
     deps = [":gmail_poller"],
+)
+
+py_test(
+    name = "chat_gmail_agent_test",
+    srcs = ["test_chat_gmail_agent.py"],
+    deps = [":chat_gmail_agent_lib"],
 )
 
 test_suite(
