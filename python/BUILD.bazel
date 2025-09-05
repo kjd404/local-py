@@ -112,6 +112,12 @@ py_test(
     deps = [":gmail_polling_agent"],
 )
 
+py_test(
+    name = "setup_venv_test",
+    srcs = ["test_setup_venv.py"],
+    deps = [":setup_venv"],
+)
+
 test_suite(
     name = "tests",
 )
