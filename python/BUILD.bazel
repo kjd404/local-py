@@ -44,6 +44,16 @@ py_binary(
     ],
 )
 
+py_binary(
+    name = "get_gmail_token",
+    srcs = ["get_gmail_token.py"],
+    main = "get_gmail_token.py",
+    deps = [
+        requirement("google-auth"),
+        requirement("google-auth-oauthlib"),
+    ],
+)
+
 py_test(
     name = "gmail_poller_test",
     srcs = ["test_gmail_poller.py"],
