@@ -9,7 +9,7 @@ from typing import List
 
 from openai import OpenAI
 
-from gmail_poller import Email, GmailPoller
+from .gmail_poller import Email, GmailPoller
 
 
 # Description of the Gmail poll function exposed to the model.

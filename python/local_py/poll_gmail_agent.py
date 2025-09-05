@@ -4,7 +4,7 @@ import os
 
 import semantic_kernel as sk
 
-from gmail_poller import GmailPoller
+from .gmail_poller import GmailPoller
 
 
 async def main() -> None:
