@@ -138,9 +138,10 @@ Replace the base URL with your LLM server's address.
 
 ## Testing
 
-Run the full test suite with Bazel:
+Run pre-commit hooks and the full test suite:
 
 ```bash
+pre-commit run --all-files
 bazel test //...
 ```
 

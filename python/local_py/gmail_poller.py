@@ -4,7 +4,7 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -40,7 +40,7 @@ class GmailPoller:
         *,
         token_path: Path | str = TOKEN_PATH,
         credentials_path: Path | str = CREDENTIALS_PATH,
-        service: Optional[object] = None,
+        service: Any | None = None,
     ) -> None:
         """Create a new :class:`GmailPoller`.
 
@@ -55,10 +55,10 @@ class GmailPoller:
 
         self.token_path = Path(token_path)
         self.credentials_path = Path(credentials_path)
-        self.service = service or self._authorize(self.token_path, self.credentials_path)
+        self.service: Any = service or self._authorize(self.token_path, self.credentials_path)
 
     @staticmethod
-    def _authorize(token_path: Path, credentials_path: Path):
+    def _authorize(token_path: Path, credentials_path: Path) -> Any:
         """Return an authorized Gmail API service."""
         creds: Credentials | None = None
         if token_path.exists():

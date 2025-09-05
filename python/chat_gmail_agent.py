@@ -6,7 +6,7 @@ import json
 import logging
 import os
 from dataclasses import asdict
-from typing import Callable, List, Optional
+from typing import Any, Callable, List
 
 from openai import OpenAI
 
@@ -39,10 +39,10 @@ GMAIL_POLL_TOOL = [
 class ChatGmailAgent:
     """Chat agent that can poll Gmail via tool calls."""
 
-    def __init__(self, poller: GmailPoller, client: Optional[OpenAI] = None) -> None:
+    def __init__(self, poller: GmailPoller, client: Any | None = None) -> None:
         self.poller = poller
         api_key = os.environ.get("OPENAI_API_KEY")
-        self.client = client or OpenAI(api_key=api_key) if api_key else OpenAI()
+        self.client: Any = client or OpenAI(api_key=api_key) if api_key else OpenAI()
 
     def _handle_gmail_poll(self, args: str) -> List[Email]:
         """Invoke :class:`GmailPoller` with the provided JSON arguments."""

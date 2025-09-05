@@ -13,3 +13,4 @@ All Bazel commands must be executed through Bazelisk to honor `.bazelversion`.
 - Modules and packages use `snake_case` names under `python/` and should preserve the existing package layout.
 - Favor idiomatic Python with clear object-oriented design and principles.
 - Every new feature requires unit tests; run `bazel test //...` and ensure tests pass before committing.
+- Run `pre-commit run --all-files` and `bazel test //...` before committing.
