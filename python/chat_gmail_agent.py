@@ -1,78 +1,111 @@
-"""Interactive chat agent that can poll Gmail using Semantic Kernel."""
-import asyncio
+"""Interactive chat agent that can poll Gmail using OpenAI tool calls."""
+
+from __future__ import annotations
+
+import json
 import logging
 import os
-import semantic_kernel as sk
-from semantic_kernel.connectors.ai.open_ai import (
-    OpenAIChatCompletion,
-    OpenAIChatPromptExecutionSettings,
-)
-from semantic_kernel.functions.kernel_arguments import KernelArguments
-from semantic_kernel.exceptions import KernelInvokeException
-from gmail_poller import GmailPoller
+from typing import List
+
+from openai import OpenAI
+
+from gmail_poller import Email, GmailPoller
 
 
-def create_kernel() -> sk.Kernel:
-    """Create and configure the Semantic Kernel."""
-    kernel = sk.Kernel()
+# Description of the Gmail poll function exposed to the model.
+GMAIL_POLL_TOOL = [
+    {
+        "type": "function",
+        "function": {
+            "name": "gmail_poll",
+            "description": (
+                "Poll Gmail for unread messages, optionally filtered by sender."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "sender": {
+                        "type": "string",
+                        "description": "Only return unread emails from this address.",
+                    }
+                },
+            },
+        },
+    }
+]
+
+
+def handle_gmail_poll(args: str) -> List[Email]:
+    """Invoke :class:`GmailPoller` with the provided JSON arguments."""
+    params = json.loads(args or "{}")
+    poller = GmailPoller()
+    return poller.poll(sender=params.get("sender"))
+
+
+def main() -> None:
+    logging.basicConfig(level=logging.INFO)
 
     api_key = os.environ.get("OPENAI_API_KEY")
-    if api_key:
-        service = OpenAIChatCompletion(ai_model_id="gpt-4o-mini", api_key=api_key)
-        kernel.add_service(service)
-    else:
-        logging.warning("OPENAI_API_KEY is not set; chat will fail")
+    if not api_key:
+        logging.error("OPENAI_API_KEY is not set; chat will fail")
+        return
 
-    poller = GmailPoller()
-    kernel.add_function(
-        plugin_name="gmail",
-        function=poller.poll,
-        function_name="poll",
-        description="Poll Gmail for unread messages, optionally filtered by sender.",
-    )
-    return kernel
+    client = OpenAI(api_key=api_key)
 
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "You are a helpful assistant. Use the gmail_poll tool to check for "
+                "unread emails when the user requests it."
+            ),
+        }
+    ]
 
-async def chat_loop(kernel: sk.Kernel) -> None:
-    """Simple interactive chat loop."""
     print("Type 'exit' to quit.")
     while True:
         user = input("User > ")
         if user.strip().lower() in {"exit", "quit"}:
             break
-        # Forward user message through the kernel so the model can decide to call functions.
-        try:
-            settings = OpenAIChatPromptExecutionSettings(tool_choice="auto")
-            result = await kernel.invoke(
-                plugin_name="chat",
-                function_name="chat",
-                input=user,
-                arguments=KernelArguments(settings=settings),
+        messages.append({"role": "user", "content": user})
+
+        # Ask the model for the next action, providing the Gmail tool definition.
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=messages,
+            tools=GMAIL_POLL_TOOL,
+            tool_choice="auto",
+        )
+        message = response.choices[0].message
+
+        if message.tool_calls:
+            # Execute each requested tool and append results for a final response.
+            for call in message.tool_calls:
+                if call.function.name == "gmail_poll":
+                    emails = handle_gmail_poll(call.function.arguments)
+                    content = json.dumps([email.__dict__ for email in emails])
+                    messages.append(
+                        {
+                            "role": "tool",
+                            "tool_call_id": call.id,
+                            "content": content,
+                        }
+                    )
+
+            followup = client.chat.completions.create(
+                model="gpt-4o-mini", messages=messages
             )
-        except KernelInvokeException as exc:
-            logging.error("Chat invocation failed: %s", exc)
-            print("Error: unable to generate chat response. Check API key and quota.")
+            reply = followup.choices[0].message.content or ""
+            messages.append({"role": "assistant", "content": reply})
+            print(reply)
             continue
 
-        if result:
-            print(result)
-
-
-def main() -> None:
-    logging.basicConfig(level=logging.INFO)
-    kernel = create_kernel()
-    # Register a basic chat function that relays messages to the model.
-    kernel.add_function(
-        plugin_name="chat",
-        function_name="chat",
-        description="General chat interface",
-        prompt=(
-            "You are a helpful assistant. Use the gmail.poll function to check "
-            "for unread emails when the user requests it. {{$input}}"
-        ),
-    )
-    asyncio.run(chat_loop(kernel))
+        # No tool calls; just print the assistant's message.
+        reply = message.content or ""
+        messages.append({"role": "assistant", "content": reply})
+        print(reply)
 
 
 if __name__ == "__main__":
     main()
+
