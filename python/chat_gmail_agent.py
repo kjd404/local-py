@@ -7,6 +7,7 @@ from semantic_kernel.connectors.ai.open_ai import (
     OpenAIChatCompletion,
     OpenAIChatPromptExecutionSettings,
 )
+from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.exceptions import KernelInvokeException
 from gmail_poller import GmailPoller
 
@@ -46,7 +47,7 @@ async def chat_loop(kernel: sk.Kernel) -> None:
                 plugin_name="chat",
                 function_name="chat",
                 input=user,
-                execution_settings=settings,
+                arguments=KernelArguments(settings=settings),
             )
         except KernelInvokeException as exc:
             logging.error("Chat invocation failed: %s", exc)
