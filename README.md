@@ -145,8 +145,6 @@ pre-commit run --all-files
 bazel test //...
 ```
 
-Continuous integration runs these commands for each push and pull request.
-
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for coding standards, package layout, and testing requirements.
