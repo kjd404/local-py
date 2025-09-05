@@ -1,4 +1,4 @@
-import requests
+import requests  # type: ignore[import-untyped]
 import semantic_kernel
 import googleapiclient
 import google.auth
