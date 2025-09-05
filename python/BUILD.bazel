@@ -116,6 +116,7 @@ py_test(
 py_test(
     name = "setup_venv_test",
     srcs = ["test_setup_venv.py"],
+    main = "test_setup_venv.py",
     deps = [":setup_venv"],
 )
 
