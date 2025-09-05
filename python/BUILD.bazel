@@ -36,6 +36,7 @@ py_library(
         requirement("google-api-python-client"),
         requirement("google-auth"),
         requirement("google-auth-oauthlib"),
+        requirement("semantic-kernel"),
     ],
     visibility = ["//visibility:public"],
 )
@@ -57,7 +58,7 @@ py_binary(
     main = "chat_gmail_agent.py",
     deps = [
         ":gmail_poller",
-        requirement("semantic-kernel"),
+        requirement("openai"),
     ],
     data = [":gmail_credentials"],
 )
