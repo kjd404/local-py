@@ -1,6 +1,7 @@
 """Utilities for polling Gmail for new messages."""
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List
@@ -10,7 +11,12 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
-TOKEN_PATH = Path("token.json")
+TOKEN_PATH = Path(os.environ.get("GMAIL_TOKEN_PATH", "token.json"))
+CREDENTIALS_PATH = Path(
+    os.environ.get(
+        "GMAIL_CREDENTIALS_FILE", str(Path(__file__).with_name("credentials.json"))
+    )
+)
 SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]
 
 
@@ -36,7 +42,9 @@ class GmailPoller:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
             else:
-                flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
+                flow = InstalledAppFlow.from_client_secrets_file(
+                    str(CREDENTIALS_PATH), SCOPES
+                )
                 creds = flow.run_local_server(port=0)
             TOKEN_PATH.write_text(creds.to_json())
         return build("gmail", "v1", credentials=creds)

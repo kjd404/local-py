@@ -2,6 +2,11 @@ load("@pypi//:requirements.bzl", "requirement")
 load("@rules_python//python:py_binary.bzl", "py_binary")
 load("@rules_python//python:py_library.bzl", "py_library")
 
+filegroup(
+    name = "gmail_credentials",
+    srcs = ["credentials.json"],
+)
+
 py_binary(
     name = "hello",
     srcs = ["hello.py"],
@@ -43,6 +48,7 @@ py_binary(
         ":gmail_poller",
         requirement("semantic-kernel"),
     ],
+    data = [":gmail_credentials"],
 )
 
 py_binary(
@@ -53,6 +59,7 @@ py_binary(
         ":gmail_poller",
         requirement("semantic-kernel"),
     ],
+    data = [":gmail_credentials"],
 )
 
 py_binary(
@@ -63,6 +70,7 @@ py_binary(
         requirement("google-auth"),
         requirement("google-auth-oauthlib"),
     ],
+    data = [":gmail_credentials"],
 )
 
 py_test(
