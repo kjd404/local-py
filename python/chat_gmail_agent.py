@@ -42,7 +42,10 @@ async def chat_loop(kernel: sk.Kernel) -> None:
             break
         # Forward user message through the kernel so the model can decide to call functions.
         try:
-            settings = OpenAIChatPromptExecutionSettings(tool_choice="auto")
+            # "tool_choice" requires a tools list in the OpenAI request. We don't
+            # provide one here, so use the legacy "function_call" option instead
+            # to let the model call kernel functions automatically when needed.
+            settings = OpenAIChatPromptExecutionSettings(function_call="auto")
             result = await kernel.invoke(
                 plugin_name="chat",
                 function_name="chat",
