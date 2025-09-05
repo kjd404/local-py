@@ -15,7 +15,8 @@ from semantic_kernel.functions import kernel_function
 TOKEN_PATH = Path(os.environ.get("GMAIL_TOKEN_PATH", "token.json"))
 CREDENTIALS_PATH = Path(
     os.environ.get(
-        "GMAIL_CREDENTIALS_FILE", str(Path(__file__).with_name("credentials.json"))
+        "GMAIL_CREDENTIALS_FILE",
+        str(Path(__file__).resolve().parent.parent / "credentials.json"),
     )
 )
 SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]

@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import semantic_kernel as sk
 
-from gmail_poller import Email, GmailPoller
+from local_py.gmail_poller import Email, GmailPoller
 
 
 class GmailPollerTest(TestCase):
