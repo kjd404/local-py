@@ -43,3 +43,13 @@ py_binary(
         requirement("semantic-kernel"),
     ],
 )
+
+py_test(
+    name = "gmail_poller_test",
+    srcs = ["test_gmail_poller.py"],
+    deps = [":gmail_poller"],
+)
+
+test_suite(
+    name = "tests",
+)

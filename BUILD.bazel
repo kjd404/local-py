@@ -2,3 +2,8 @@ alias(
     name = "setup_venv",
     actual = "//python:setup_venv",
 )
+
+test_suite(
+    name = "tests",
+    tests = ["//python:tests"],
+)
