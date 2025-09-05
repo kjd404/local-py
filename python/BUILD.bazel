@@ -33,3 +33,13 @@ py_library(
     ],
     visibility = ["//visibility:public"],
 )
+
+py_binary(
+    name = "poll_gmail_agent",
+    srcs = ["poll_gmail_agent.py"],
+    main = "poll_gmail_agent.py",
+    deps = [
+        ":gmail_poller",
+        requirement("semantic-kernel"),
+    ],
+)
