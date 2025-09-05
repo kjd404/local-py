@@ -1,5 +1,6 @@
 load("@pypi//:requirements.bzl", "requirement")
 load("@rules_python//python:py_binary.bzl", "py_binary")
+load("@rules_python//python:py_library.bzl", "py_library")
 
 py_binary(
     name = "hello",
@@ -19,5 +20,16 @@ py_binary(
     srcs = ["setup_venv.py"],
     main = "setup_venv.py",
     data = ["requirements.txt"],
+    visibility = ["//visibility:public"],
+)
+
+py_library(
+    name = "gmail_poller",
+    srcs = ["gmail_poller.py"],
+    deps = [
+        requirement("google-api-python-client"),
+        requirement("google-auth"),
+        requirement("google-auth-oauthlib"),
+    ],
     visibility = ["//visibility:public"],
 )
