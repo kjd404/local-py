@@ -8,6 +8,13 @@ filegroup(
     srcs = ["credentials.sample.json"],
 )
 
+py_library(
+    name = "setup_venv_lib",
+    srcs = ["setup_venv.py"],
+    imports = ["."],
+    visibility = ["//visibility:public"],
+)
+
 py_binary(
     name = "hello",
     srcs = ["hello.py"],
@@ -23,8 +30,8 @@ py_binary(
 
 py_binary(
     name = "setup_venv",
-    srcs = ["setup_venv.py"],
     main = "setup_venv.py",
+    deps = [":setup_venv_lib"],
     data = ["requirements.txt"],
     visibility = ["//visibility:public"],
 )
@@ -120,7 +127,7 @@ py_test(
     name = "setup_venv_test",
     srcs = ["test_setup_venv.py"],
     main = "test_setup_venv.py",
-    deps = [":setup_venv"],
+    deps = [":setup_venv_lib"],
 )
 
 test_suite(
