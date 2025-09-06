@@ -98,18 +98,21 @@ py_binary(
 py_test(
     name = "gmail_poller_test",
     srcs = ["test_gmail_poller.py"],
+    main = "test_gmail_poller.py",
     deps = [":gmail_poller"],
 )
 
 py_test(
     name = "chat_gmail_agent_test",
     srcs = ["test_chat_gmail_agent.py"],
+    main = "test_chat_gmail_agent.py",
     deps = [":chat_gmail_agent_lib"],
 )
 
 py_test(
     name = "gmail_polling_agent_test",
     srcs = ["test_gmail_polling_agent.py"],
+    main = "test_gmail_polling_agent.py",
     deps = [":gmail_polling_agent"],
 )
 
