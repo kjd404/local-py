@@ -47,7 +47,15 @@ class ChatGmailAgentTest(TestCase):
         agent.run(input_fn=fake_input, print_fn=fake_print)
 
         poller.poll.assert_called_once_with(sender=None)
-        self.assertIn("All done", outputs[-1])
+        self.assertEqual(
+            [
+                "Type 'exit' to quit.",
+                "Checking Gmail...",
+                "Found 1 unread email.",
+                "All done",
+            ],
+            outputs,
+        )
 
         tool_message = client.chat.completions.create.call_args_list[1].kwargs[
             "messages"
