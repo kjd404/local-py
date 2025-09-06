@@ -86,7 +86,12 @@ class ChatGmailAgent:
             if getattr(message, "tool_calls", None):
                 for call in message.tool_calls:
                     if call.function.name == "gmail_poll":
+                        print_fn("Checking Gmail...")
                         emails = self._handle_gmail_poll(call.function.arguments)
+                        count = len(emails)
+                        print_fn(
+                            f"Found {count} unread email{'s' if count != 1 else ''}."
+                        )
                         content = json.dumps([asdict(email) for email in emails])
                         messages.append(
                             {
