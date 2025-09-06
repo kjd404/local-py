@@ -10,7 +10,7 @@ ENV_FILE="$ROOT/.env"
 CLI="$ROOT/.venv/bin/pgcli"
 
 if [ -f "$ENV_FILE" ]; then
-  # shellcheck disable=SC1091
+  # shellcheck disable=SC1090,SC1091
   source "$ENV_FILE"
 else
   echo ".env file not found" >&2

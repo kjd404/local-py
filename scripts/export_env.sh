@@ -11,5 +11,6 @@ if [ -f "$(dirname "$0")/../.env" ]; then
   echo "Environment variables loaded from .env"
 else
   echo ".env file not found" >&2
+  # shellcheck disable=SC2317
   return 1 2>/dev/null || exit 1
 fi
